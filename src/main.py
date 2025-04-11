@@ -11,8 +11,6 @@ class Robot:
         self.hal = HAL()
 
     def periodic(self):
-        print(time.time())
-        return
         image = self.gpt.capture_image()
         output = self.gpt.generate_command(image)
         print(output)
