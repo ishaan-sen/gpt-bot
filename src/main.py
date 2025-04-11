@@ -1,13 +1,18 @@
 import time
+import atexit
+
 from subsystems.gpt import GPT
-# from subsystems.hal import HAL
+from subsystems.hal import HAL
+
 
 class Robot:
     def __init__(self):
         self.gpt = GPT()
-        # self.hal = HAL()
+        self.hal = HAL()
 
     def periodic(self):
+        print(time.time())
+        return
         image = self.gpt.capture_image()
         output = self.gpt.generate_command(image)
         print(output)
@@ -29,11 +34,21 @@ class Robot:
         # self.hal.drive.drive(*drive_input)
         print(command[0], drive_input)
 
+    def cleanup(self):
+        self.hal.drive.cleanup()
 
 
 if __name__ == "__main__":
     robot = Robot()
+
+    atexit.register(robot.cleanup)
+
+    loop_time = 3
+    last_time = time.time()
+
     while True:
-        robot.periodic()
-        time.sleep(1)
-    
+        now = time.time()
+        if now - last_time > loop_time:
+            last_time = now
+            robot.periodic()
+            time.sleep(0.1)

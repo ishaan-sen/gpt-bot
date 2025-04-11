@@ -3,6 +3,7 @@ import cv2
 import json
 from openai import OpenAI
 
+
 class GPT:
     def __init__(self):
         self.client = OpenAI()
@@ -13,7 +14,7 @@ class GPT:
         cap.release()
         if not ret:
             raise RuntimeError("Failed to capture image from camera.")
-        ret, buffer = cv2.imencode('.jpg', frame)
+        ret, buffer = cv2.imencode(".jpg", frame)
         if not ret:
             raise RuntimeError("Failed to encode image.")
         return base64.b64encode(buffer).decode("utf-8")
@@ -27,10 +28,9 @@ class GPT:
             "their approximate location using natural language (e.g., 'left', 'center', 'bottom right'); "
             "if no human is detected, set the human_position value to null. Respond with a valid JSON object "
             "containing exactly two keys: 'command' and 'human_position'. For example: {\"command\": \"forward\", "
-            "\"human_position\": \"top left\"} or {\"command\": \"stop\", \"human_position\": null}. Do not include "
+            '"human_position": "top left"} or {"command": "stop", "human_position": null}. Do not include '
             "any extra text."
         )
-
 
         response = self.client.responses.create(
             model="gpt-4o-mini",
@@ -62,7 +62,9 @@ class GPT:
             raise ValueError("Response is not valid JSON") from e
 
         if "command" not in data or "human_position" not in data:
-            raise ValueError("JSON must contain both 'command' and 'human_position' keys")
+            raise ValueError(
+                "JSON must contain both 'command' and 'human_position' keys"
+            )
 
         command = data["command"]
         human_position = data["human_position"]
