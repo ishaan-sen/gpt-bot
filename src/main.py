@@ -8,32 +8,38 @@ from subsystems.hal import HAL
 class Robot:
     def __init__(self):
         self.gpt = GPT()
-        self.hal = HAL()
+        # self.hal = HAL()
+
+        self.last_image = self.gpt.capture_image()
+
+
 
     def periodic(self):
         image = self.gpt.capture_image()
-        output = self.gpt.generate_command(image)
+        output = self.gpt.generate_command(image, self.last_image)
+        self.last_image = image
         print(output)
         command = self.gpt.parse_command(output)
         print(command)
 
-        if command[0] == "forward":
+        if command == "forward":
             drive_input = (0.6, 0.0)
-        elif command[0] == "left":
+        elif command == "left":
             drive_input = (0.4, -1.0)
-        elif command[0] == "right":
+        elif command == "right":
             drive_input = (0.4, 1.0)
-        elif command[0] == "stop":
+        elif command == "stop":
             drive_input = (0.0, 0.0)
         else:
             drive_input = (0.0, 0.0)
             raise ValueError(command)
 
         # self.hal.drive.drive(*drive_input)
-        print(command[0], drive_input)
+        print(command, drive_input)
 
     def cleanup(self):
-        self.hal.drive.cleanup()
+        pass
+        # self.hal.drive.cleanup()
 
 
 if __name__ == "__main__":
