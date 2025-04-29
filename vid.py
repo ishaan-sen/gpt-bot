@@ -25,7 +25,7 @@ while cap.isOpened():
     if success:
         gray = cv2.cvtColor(img - last, cv2.COLOR_BGR2GRAY)
         # cv2.imshow("Result", convolve2d(gray, filter / 255))
-        cv2.imshow("Result", gray)
+        cv2.imshow("Result", last and gray)
         # last = last + img
         # last = last / 2
         last = img
